@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: false
+  
+  tasks:
+
+  - name: stop current running container
+    command: docker stop simple-devops-container
+    ignore_errors: yes
+
+  - name: remove stopped container
+    command: docker rm simple-devops-container
+    ignore_errors: yes
+
+  - name: remove docker image
+    command: docker rmi 7036000610/trump:latest
+    ignore_errors: yes
+
+#  - name: build docker image using war file
+#    command: docker build -t simple-devops-image .
+#    args:
+#      chdir: /opt/docker
+
+  - name: pull docker image from dockerhub
+    command: docker pull 7036000610/trump:latest
+
+  - name: create container using simple-devops-image
+    command: docker run -d --name simple-devops-container -p 8080:8080 7036000610/trump
